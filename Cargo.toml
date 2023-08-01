@@ -1,9 +1,9 @@
 [package]
 name = "frand"
-version = "0.5.0"
+version = "0.7.0"
 edition = "2021"
 authors = ["EngusMaze"]
-description = "Random number generation library"
+description = "Blazingly fast random number generation library"
 tags = ["rng", "random"]
 repository = "https://github.com/engusmaze/fast-noise-lite-rs"
 homepage = "https://github.com/engusmaze/fast-noise-lite-rs"

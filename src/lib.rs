@@ -1,15 +1,15 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-mod traits;
-pub use traits::*;
+mod rng;
+pub use rng::*;
 
-// Shifter hash
+// fhash
 #[inline(always)]
 pub fn hash64(mut hash: u64) -> u64 {
     hash = (hash ^ hash >> 32).wrapping_mul(15485907386658061715);
     hash = (hash ^ hash >> 32).wrapping_mul(15485907386658061715);
-    hash.wrapping_add(1) // So that it won't be stuck at 0
-     ^ hash >> 32
+    // Add so that it won't be stuck at 0
+    (hash.wrapping_add(1) ^ hash >> 32).wrapping_mul(15485907386658061715)
 }
 #[inline(always)]
 pub fn hash64simple(hash: u64) -> u64 {
@@ -17,7 +17,16 @@ pub fn hash64simple(hash: u64) -> u64 {
 }
 #[inline(always)]
 pub fn mix2_64(x: u64, y: u64) -> u64 {
-    x ^ (y << 15).wrapping_add(y)
+    x.wrapping_add(y) ^ x.wrapping_add(123)
+}
+
+#[inline]
+fn hash_time() -> u64 {
+    let time = SystemTime::now();
+    let time = time
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    hash64(mix2_64(time.as_secs(), time.subsec_nanos() as u64))
 }
 
 pub struct Rand {
@@ -30,60 +39,20 @@ impl Rand {
     }
     #[inline]
     pub fn new() -> Self {
-        let start = SystemTime::now();
-        let time = start
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went backwards");
-        Self::with_seed(mix2_64(time.as_secs(), time.subsec_nanos() as u64))
+        Self::with_seed(hash_time())
     }
 
     #[inline(always)]
-    pub fn gen<T: RandomGeneratable>(&mut self) -> T {
-        T::create_random(self)
-    }
-}
-impl RNG for Rand {
-    #[inline(always)]
-    fn generate_u64(&mut self) -> u64 {
+    pub(crate) fn next_u64(&mut self) -> u64 {
+        let value = self.seed;
         self.seed = hash64simple(self.seed);
-        self.seed
-    }
-    #[inline(always)]
-    fn gen<T: RandomGeneratable>(&mut self) -> T {
-        self.gen()
-    }
-}
 
-pub struct QualityRand {
-    seed: u64,
-}
-impl QualityRand {
-    #[inline(always)]
-    pub fn with_seed(seed: u64) -> Self {
-        Self { seed }
+        // We need to pass the last generated value so that float values already have
+        // pre-generated u64 values and calculate their own value from them
+        value
     }
-    #[inline]
-    pub fn new() -> Self {
-        let start = SystemTime::now();
-        let time = start
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went backwards");
-        Self::with_seed(mix2_64(time.as_secs(), time.subsec_nanos() as u64))
-    }
-
     #[inline(always)]
     pub fn gen<T: RandomGeneratable>(&mut self) -> T {
         T::create_random(self)
-    }
-}
-impl RNG for QualityRand {
-    #[inline(always)]
-    fn generate_u64(&mut self) -> u64 {
-        self.seed = hash64(self.seed);
-        self.seed
-    }
-    #[inline(always)]
-    fn gen<T: RandomGeneratable>(&mut self) -> T {
-        self.gen()
     }
 }

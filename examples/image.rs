@@ -1,4 +1,4 @@
-use frand::Rand;
+use frand::{hash64, mix2_64, Rand};
 use image::{ImageBuffer, Luma};
 
 fn main() {
