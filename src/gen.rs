@@ -81,6 +81,13 @@ impl RandomGeneratable for isize {
     }
 }
 
+impl RandomGeneratable for bool {
+    #[inline(always)]
+    fn create_random(rng: &mut Rand) -> bool {
+        rng.gen::<u8>() < 128
+    }
+}
+
 // Floats
 
 // Shift to mentisa and make the exponent so that the value range of mentisa is [1; 2)

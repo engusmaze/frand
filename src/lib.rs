@@ -1,32 +1,28 @@
-use std::time::{SystemTime, UNIX_EPOCH};
-
-mod rng;
-pub use rng::*;
+mod gen;
+pub use gen::*;
 
 // fhash
 #[inline(always)]
-pub fn hash64(mut hash: u64) -> u64 {
-    hash = (hash ^ hash >> 32).wrapping_mul(15485907386658061715);
-    hash = (hash ^ hash >> 32).wrapping_mul(15485907386658061715);
-    // Add so that it won't be stuck at 0
-    (hash.wrapping_add(1) ^ hash >> 32).wrapping_mul(15485907386658061715)
+fn hash64simple(hash: u64) -> u64 {
+    (hash ^ hash >> 32).wrapping_mul(1645605008518198613)
 }
 #[inline(always)]
-pub fn hash64simple(hash: u64) -> u64 {
-    (hash.wrapping_add(1) ^ hash >> 32).wrapping_mul(15485907386658061715)
+fn hash64(mut hash: u64) -> u64 {
+    hash = (hash ^ hash >> 32).wrapping_mul(4997996261773036203);
+    hash = (hash ^ hash >> 32).wrapping_mul(4997996261773036203);
+    hash ^ hash >> 32
 }
 #[inline(always)]
-pub fn mix2_64(x: u64, y: u64) -> u64 {
-    x.wrapping_add(y) ^ x.wrapping_add(123)
+fn mix2_64(x: u64, y: u64) -> u64 {
+    x.wrapping_add(y) ^ y << 10
 }
 
 #[inline]
 fn hash_time() -> u64 {
-    let time = SystemTime::now();
-    let time = time
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    hash64(mix2_64(time.as_secs(), time.subsec_nanos() as u64))
+    let duration = std::time::SystemTime::UNIX_EPOCH.elapsed().expect(
+        "Getting elapsed time since UNIX_EPOCH. If this fails, we've somehow violated causality",
+    );
+    mix2_64(duration.as_secs(), duration.subsec_nanos() as u64)
 }
 
 pub struct Rand {
@@ -35,11 +31,15 @@ pub struct Rand {
 impl Rand {
     #[inline(always)]
     pub fn with_seed(seed: u64) -> Self {
-        Self { seed }
+        Self { seed: hash64(seed) }
     }
     #[inline]
     pub fn new() -> Self {
         Self::with_seed(hash_time())
+    }
+    #[inline]
+    pub fn rehash(&mut self) {
+        self.seed = hash64(hash_time());
     }
 
     #[inline(always)]
