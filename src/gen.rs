@@ -92,16 +92,17 @@ impl RandomGeneratable for bool {
 
 // Shift to mentisa and make the exponent so that the value range of mentisa is [1; 2)
 // Convert to float and subtract 1.0 so that we get [0; 1)
+// See https://mina86.com/2016/random-reals/
 impl RandomGeneratable for f32 {
     #[inline(always)]
     fn create_random(rng: &mut Rand) -> f32 {
-        unsafe { *(&(rng.next_u64() as u32 >> 9 | 0x3f800000) as *const _ as *const f32) - 1.0 }
+        f32::from_bits(rng.next_u64() as u32 >> 9 | 0x3f800000) - 1.0
     }
 }
 impl RandomGeneratable for f64 {
     #[inline(always)]
     fn create_random(rng: &mut Rand) -> f64 {
-        unsafe { *(&(rng.next_u64() >> 12 | 0x3ff0000000000000) as *const _ as *const f64) - 1.0 }
+        f64::from_bits(rng.next_u64() >> 12 | 0x3ff0000000000000) - 1.0
     }
 }
 
