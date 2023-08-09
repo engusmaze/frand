@@ -71,6 +71,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "fastrand"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6999dc1837253364c2ebb0704ba97994bd874e8f195d665c50b7548f6ea92764"
+
+[[package]]
 name = "fdeflate"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -93,8 +99,10 @@ dependencies = [
 name = "frand"
 version = "0.7.1"
 dependencies = [
+ "fastrand",
  "hashbrown",
  "image",
+ "nanorand",
  "rand",
 ]
 
@@ -148,6 +156,12 @@ dependencies = [
  "adler",
  "simd-adler32",
 ]
+
+[[package]]
+name = "nanorand"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a51313c5820b0b02bd422f4b44776fbf47961755c74ce64afc73bfad10226c3"
 
 [[package]]
 name = "num-integer"

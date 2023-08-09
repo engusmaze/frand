@@ -1,6 +1,8 @@
 use frand::Rand;
 use hashbrown::HashSet;
 
+// Test if the generated values are repeating
+
 fn main() {
     // We insert a new number after every billion values, effectively checking for a loop
     let mut set = HashSet::new();
@@ -12,7 +14,7 @@ fn main() {
         loop {
             let value = rng.gen::<u64>();
             if set.contains(&value) {
-                panic!("Cringe {i}!");
+                panic!("Found loop on {i} iteration!");
             }
             i += 1;
             if i == next_end {

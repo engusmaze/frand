@@ -3,10 +3,6 @@ pub use gen::*;
 
 // fhash
 #[inline(always)]
-fn hash64simple(hash: u64) -> u64 {
-    (hash ^ hash >> 32).wrapping_mul(1645605008518198613)
-}
-#[inline(always)]
 fn hash64(mut hash: u64) -> u64 {
     hash = (hash ^ hash >> 32).wrapping_mul(4997996261773036203);
     hash = (hash ^ hash >> 32).wrapping_mul(4997996261773036203);
@@ -44,12 +40,10 @@ impl Rand {
 
     #[inline(always)]
     pub(crate) fn next_u64(&mut self) -> u64 {
-        let value = self.seed;
-        self.seed = hash64simple(self.seed);
-
-        // We need to pass the last generated value so that float values already have
-        // pre-generated u64 values and calculate their own value from them
-        value
+        let mut value = self.seed.wrapping_add(16580203494071533729);
+        self.seed = value;
+        value = value.wrapping_mul(7744658036413730167);
+        value ^ value >> 32
     }
     #[inline(always)]
     pub fn gen<T: RandomGeneratable>(&mut self) -> T {

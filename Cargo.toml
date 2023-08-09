@@ -14,4 +14,8 @@ readme = "README.md"
 [dev-dependencies]
 hashbrown = "0.14.0"
 image = { version = "0.24.6", default-features = false, features = ["png"] }
+nanorand = "0.7.0"
 rand = { version = "0.8.5", features = ["small_rng"] }
+fastrand = "2.0.0"
+
+[dependencies]

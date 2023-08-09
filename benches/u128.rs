@@ -42,3 +42,27 @@ fn bench_3_rand_rand_u128(b: &mut Bencher) {
         }
     });
 }
+
+#[bench]
+fn bench_4_nanorand_wyrand_u128(b: &mut Bencher) {
+    use nanorand::{Rng, WyRand};
+
+    let mut rng = WyRand::new();
+    b.iter(|| {
+        for _ in 0..ITERATIONS {
+            black_box(rng.generate::<u128>());
+        }
+    });
+}
+
+#[bench]
+fn bench_5_fastrand_u128(b: &mut Bencher) {
+    use fastrand::Rng;
+
+    let mut rng = Rng::new();
+    b.iter(|| {
+        for _ in 0..ITERATIONS {
+            black_box(rng.u128(..));
+        }
+    });
+}
