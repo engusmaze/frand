@@ -40,9 +40,9 @@ impl Rand {
 
     #[inline(always)]
     pub(crate) fn next_u64(&mut self) -> u64 {
-        let mut value = self.seed.wrapping_add(16580203494071533729);
+        let mut value = self.seed.wrapping_add(6720460899686623385);
         self.seed = value;
-        value = value.wrapping_mul(7744658036413730167);
+        value = value.wrapping_mul(value ^ 13372697332427895741);
         value ^ value >> 32
     }
     #[inline(always)]

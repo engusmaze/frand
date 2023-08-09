@@ -19,19 +19,18 @@ println!("{}", rng.gen::<f32>());
 
 | rand::ThreadRng | rand::SmallRng | fastrand::Rng | frand::Rand |
 | :-------------: | :------------: | :-----------: | :---------: |
-|      1.00x      |     2.98x      |     6.78x     |    7.12x    |
+|      1.00x      |     3.74x      |     5.80x     |    6.09x    |
 
 ### f64
 
 | rand::ThreadRng | rand::SmallRng | fastrand::Rng | frand::Rand |
 | :-------------: | :------------: | :-----------: | :---------: |
-|      1.00x      |     2.96x      |     2.31x     |    4.85x    |
+|      1.00x      |     3.79x      |     2.34x     |    5.57x    |
 
 ### u128
 
 | rand::ThreadRng | rand::SmallRng | fastrand::Rng | frand::Rand |
 | :-------------: | :------------: | :-----------: | :---------: |
-|      1.00x      |     1.90x      |     6.00x     |    8.10x    |
-
+|      1.00x      |     2.15x      |     6.79x     |    7.24x    |
 
 If you have suggestions on how to improve this library, you can contribute to this project!

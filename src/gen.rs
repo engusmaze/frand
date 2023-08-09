@@ -4,61 +4,29 @@ pub trait RandomGeneratable {
     fn create_random(rng: &mut Rand) -> Self;
 }
 
-// Unsigned integers
-impl RandomGeneratable for u8 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> u8 {
-        rng.next_u64() as u8
-    }
+// Macro to implement repeating code
+macro_rules! implement_cast {
+    ($($typ: ty)*) => {
+        $(
+            impl RandomGeneratable for $typ {
+                #[inline(always)]
+                fn create_random(rng: &mut Rand) -> $typ {
+                    rng.next_u64() as $typ
+                }
+            }
+        )*
+    };
 }
-impl RandomGeneratable for u16 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> u16 {
-        rng.next_u64() as u16
-    }
+implement_cast! {
+    u8 u16 u32 u64
+    i8 i16 i32 i64
+    usize isize
 }
-impl RandomGeneratable for u32 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> u32 {
-        rng.next_u64() as u32
-    }
-}
-impl RandomGeneratable for u64 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> u64 {
-        rng.next_u64()
-    }
-}
+
 impl RandomGeneratable for u128 {
     #[inline(always)]
     fn create_random(rng: &mut Rand) -> u128 {
         (rng.next_u64() as u128) << 64 | rng.next_u64() as u128
-    }
-}
-
-// Signed integers
-impl RandomGeneratable for i8 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> i8 {
-        rng.next_u64() as i8
-    }
-}
-impl RandomGeneratable for i16 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> i16 {
-        rng.next_u64() as i16
-    }
-}
-impl RandomGeneratable for i32 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> i32 {
-        rng.next_u64() as i32
-    }
-}
-impl RandomGeneratable for i64 {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> i64 {
-        rng.next_u64() as i64
     }
 }
 impl RandomGeneratable for i128 {
@@ -68,23 +36,10 @@ impl RandomGeneratable for i128 {
     }
 }
 
-impl RandomGeneratable for usize {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> usize {
-        rng.next_u64() as usize
-    }
-}
-impl RandomGeneratable for isize {
-    #[inline(always)]
-    fn create_random(rng: &mut Rand) -> isize {
-        rng.next_u64() as isize
-    }
-}
-
 impl RandomGeneratable for bool {
     #[inline(always)]
     fn create_random(rng: &mut Rand) -> bool {
-        rng.gen::<u8>() < 128
+        rng.gen::<u8>() & 1 == 0
     }
 }
 
