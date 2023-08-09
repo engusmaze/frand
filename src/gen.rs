@@ -114,8 +114,9 @@ pub trait Shuffled {
 impl<T> Shuffle for [T] {
     #[inline]
     fn shuffle(&mut self, rng: &mut Rand) {
-        for i in 0..self.len() {
-            self.swap(i, rng.gen::<usize>() % self.len());
+        // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+        for i in (1..self.len()).rev() {
+            self.swap(i, rng.gen::<usize>() % (i + 1));
         }
     }
 }
