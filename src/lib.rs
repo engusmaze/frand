@@ -1,6 +1,14 @@
 mod gen;
 pub use gen::*;
 
+mod shuffle;
+pub use shuffle::*;
+
+mod bench_util;
+
+mod cast;
+pub(crate) use cast::*;
+
 // fhash
 #[inline(always)]
 fn hash64(mut hash: u64) -> u64 {
@@ -15,14 +23,14 @@ fn mix2_64(x: u64, y: u64) -> u64 {
 
 #[inline]
 fn hash_time() -> u64 {
-    let duration = std::time::SystemTime::UNIX_EPOCH.elapsed().expect(
-        "Getting elapsed time since UNIX_EPOCH. If this fails, we've somehow violated causality",
-    );
+    let duration = std::time::SystemTime::UNIX_EPOCH
+        .elapsed()
+        .expect("Failed to get current time");
     mix2_64(duration.as_secs(), duration.subsec_nanos() as u64)
 }
 
 pub struct Rand {
-    seed: u64,
+    pub(crate) seed: u64,
 }
 impl Rand {
     #[inline(always)]
@@ -39,14 +47,20 @@ impl Rand {
     }
 
     #[inline(always)]
-    pub(crate) fn next_u64(&mut self) -> u64 {
-        let mut value = self.seed.wrapping_add(6720460899686623385);
-        self.seed = value;
-        value = value.wrapping_mul(value ^ 13372697332427895741);
-        value ^ value >> 32
-    }
-    #[inline(always)]
     pub fn gen<T: RandomGeneratable>(&mut self) -> T {
-        T::create_random(self)
+        T::random(self)
     }
+
+    // #[inline(always)]
+    // pub fn u32(&mut self) -> u32 {
+    //     let value = self.seed.wrapping_add(18091625850528980805);
+    //     self.seed = value;
+    //     (value.wrapping_mul(value ^ 6297118212550992339) >> 32) as u32
+    // }
+    // #[inline(always)]
+    // pub fn u64(&mut self) -> u64 {
+    //     let value = self.seed.wrapping_add(13210271939021150491);
+    //     self.seed = value;
+    //     ((value as u128).wrapping_mul((value ^ 1415764303421181697) as u128) >> 48) as u64
+    // }
 }

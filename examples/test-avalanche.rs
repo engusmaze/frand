@@ -1,11 +1,9 @@
 use frand::Rand;
-use rand::{thread_rng, Rng};
 
 // Test RNG for Avalanche Effect
 
 fn main() {
-    // let mut rng = Rand::new();
-    let mut rng = thread_rng();
+    let mut rng = Rand::new();
 
     let mut min = f64::INFINITY;
     let mut max = f64::NEG_INFINITY;
@@ -30,7 +28,6 @@ fn main() {
         min = min.min(q);
         max = max.max(q);
 
-        // println!("Max: {max}\tMin: {min}");
         println!("Bias: {}%", (max - 0.5).max(0.5 - min) * 100.0)
     }
 }

@@ -14,8 +14,15 @@ readme = "README.md"
 [dev-dependencies]
 hashbrown = "0.14.0"
 image = { version = "0.24.6", default-features = false, features = ["png"] }
-nanorand = "0.7.0"
+
+# Other PRNGs
 rand = { version = "0.8.5", features = ["small_rng"] }
 fastrand = "2.0.0"
+wyhash = "0.5.0"
 
 [dependencies]
+glam = { version = "0.24.1", optional = true }
+
+[features]
+default = ["glam"]
+glam = ["dep:glam"]
