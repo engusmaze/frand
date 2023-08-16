@@ -1,5 +1,7 @@
 # FRand
 
+[![Crate](https://img.shields.io/crates/v/frand.svg)](https://crates.io/crates/frand)
+
 **FRand** is a blazingly fast, small, and simple pseudo-random number generator (PRNG) written in Rust. The advantage of using FRand is that it can produce more random numbers per second than other libraries. It also produces high-quality random numbers using a fast **non-cryptographic** hashing algorithm.
 
 To find the best constants for the algorithm, I used an automated program that tried many random constants per second and measured the bias of the output. The bias was estimated using the avalanche effect, which is a property of good hash functions that ensures that a small change in the input produces a large change in the output. The program selected the constants that minimized the bias and maximized the randomness.
