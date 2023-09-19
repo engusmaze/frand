@@ -1,10 +1,10 @@
 [package]
 name = "frand"
-version = "0.8.0"
+version = "0.8.1"
 edition = "2021"
 authors = ["EngusMaze"]
 description = "Blazingly fast random number generation library"
-tags = ["rng", "random"]
+tags = ["rng", "random", "no_std"]
 repository = "https://github.com/engusmaze/frand"
 homepage = "https://github.com/engusmaze/frand"
 license = "Apache-2.0 OR MIT"
@@ -24,5 +24,7 @@ wyhash = "0.5.0"
 glam = { version = "0.24.1", optional = true }
 
 [features]
-default = ["glam"]
+default = ["glam", "std", "alloc"]
 glam = ["dep:glam"]
+std = ["alloc"]
+alloc = []

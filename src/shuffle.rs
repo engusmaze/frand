@@ -15,20 +15,27 @@ impl<T> Shuffle for [T] {
         }
     }
 }
-impl<T> Shuffled for Box<[T]> {
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
+#[cfg(feature = "alloc")]
+impl<T> Shuffled for alloc::boxed::Box<[T]> {
     #[inline]
     fn shuffled(mut self, rng: &mut Rand) -> Self {
         self.shuffle(rng);
         self
     }
 }
-impl<T> Shuffle for Vec<T> {
+#[cfg(feature = "alloc")]
+impl<T> Shuffle for alloc::vec::Vec<T> {
     #[inline]
     fn shuffle(&mut self, rng: &mut Rand) {
         self.as_mut_slice().shuffle(rng)
     }
 }
-impl<T> Shuffled for Vec<T> {
+#[cfg(feature = "alloc")]
+impl<T> Shuffled for alloc::vec::Vec<T> {
     #[inline]
     fn shuffled(mut self, rng: &mut Rand) -> Self {
         self.shuffle(rng);
