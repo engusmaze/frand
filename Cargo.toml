@@ -1,6 +1,6 @@
 [package]
 name = "frand"
-version = "0.8.1"
+version = "0.9.0"
 edition = "2021"
 authors = ["EngusMaze"]
 description = "Blazingly fast random number generation library"
@@ -12,16 +12,15 @@ exclude = ["*.png"]
 readme = "README.md"
 
 [dev-dependencies]
-hashbrown = "0.14.0"
+hashbrown = "0.14.5"
 image = { version = "0.24.6", default-features = false, features = ["png"] }
 
 # Other PRNGs
 rand = { version = "0.8.5", features = ["small_rng"] }
 fastrand = "2.0.0"
-wyhash = "0.5.0"
 
 [dependencies]
-glam = { version = "0.24.1", optional = true }
+glam = { version = "0.27", optional = true }
 
 [features]
 default = ["glam", "std", "alloc"]

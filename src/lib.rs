@@ -8,9 +8,6 @@ pub use shuffle::*;
 
 mod bench_util;
 
-mod cast;
-pub(crate) use cast::*;
-
 // fhash
 #[inline(always)]
 const fn hash64(mut hash: u64) -> u64 {
@@ -60,7 +57,7 @@ impl Rand {
     #[cfg(feature = "std")]
     #[inline]
     pub fn rehash(&mut self) {
-        let _ = core::mem::replace(self, Self::new());
+        *self = Self::new();
     }
 
     /// Generates a random value of type T using this Rand instance.
