@@ -12,19 +12,30 @@ exclude = ["*.png"]
 readme = "README.md"
 
 [dev-dependencies]
-hashbrown = "0.14.0"
+hashbrown = "0.14"
 image = { version = "0.24.6", default-features = false, features = ["png"] }
-
+rand = { version = "0.8", features = ["small_rng"] }
 # Other PRNGs
-rand = { version = "0.8.5", features = ["small_rng"] }
+
 fastrand = "2.0.0"
 wyhash = "0.5.0"
 
 [dependencies]
-glam = { version = "0.24.1", optional = true }
+glam_027 = { package = "glam", version = "0.27", optional = true }
+glam_026 = { package = "glam", version = "0.26", optional = true }
+glam_025 = { package = "glam", version = "0.25", optional = true }
+glam_024 = { package = "glam", version = "0.24", optional = true }
+rand = { version = "0.8", features = ["small_rng"], optional = true }
+rand_core = { version = "0.6", optional = true }
 
 [features]
-default = ["glam", "std", "alloc"]
-glam = ["dep:glam"]
+default = ["glam_027", "std", "alloc", "thread_rng", "impl_rng_core"]
+thread_rng = ["dep:rand"]
+impl_rng_core = ["dep:rand_core", "dep:rand"]
+glam_027 = ["dep:glam_027", "glam"]
+glam_026 = ["dep:glam_026", "glam"]
+glam_025 = ["dep:glam_025", "glam"]
+glam_024 = ["dep:glam_024", "glam"]
+glam = []
 std = ["alloc"]
 alloc = []

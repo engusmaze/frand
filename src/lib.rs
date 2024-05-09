@@ -1,7 +1,17 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+#[cfg(feature = "impl_rng_core")]
+use rand::{RngCore, SeedableRng};
+#[cfg(feature = "impl_rng_core")]
+use rand_core::impls::fill_bytes_via_next;
+
 mod gen;
 pub use gen::*;
+
+#[cfg(feature = "thread_rng")]
+mod thread;
+#[cfg(feature = "thread_rng")]
+pub use thread::*;
 
 mod shuffle;
 pub use shuffle::*;
@@ -68,5 +78,38 @@ impl Rand {
     #[inline(always)]
     pub fn gen<T: RandomGeneratable>(&mut self) -> T {
         T::random(self)
+    }
+}
+
+
+impl RngCore for Rand {
+    fn next_u32(&mut self) -> u32 {
+        self.gen::<u32>()
+    }
+
+    fn next_u64(&mut self) -> u64 {
+        self.gen::<u64>()
+    }
+    
+    fn fill_bytes(&mut self, dest: &mut [u8]) {
+        fill_bytes_via_next(self, dest);
+    }
+    
+    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
+        self.fill_bytes(dest);
+        Ok(())
+    }
+}
+
+#[cfg(feature = "impl_rng_core")]
+impl SeedableRng for Rand {
+    type Seed = [u8; 8];
+
+    fn from_seed(seed: Self::Seed) -> Self {
+        Self::with_seed(u64::from_be_bytes(seed))
+    }
+
+    fn seed_from_u64(state: u64) -> Self {
+        Self::with_seed(state)
     }
 }

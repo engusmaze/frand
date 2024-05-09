@@ -60,8 +60,14 @@ impl RandomGeneratable for [f64; 2] {
 
 #[cfg(feature = "glam")]
 mod glam_impl {
-    use glam::{Vec2, Vec3, Vec3A, Vec4};
-
+    #[cfg(feature = "glam_027")]
+    pub use glam_027::{Vec2, Vec3, Vec3A, Vec4};
+    #[cfg(feature = "glam_026")]
+    pub use glam_026::{Vec2, Vec3, Vec3A, Vec4};
+    #[cfg(feature = "glam_025")]
+    pub use glam_025::{Vec2, Vec3, Vec3A, Vec4};
+    #[cfg(feature = "glam_024")]
+    pub use glam_025::{Vec2, Vec3, Vec3A, Vec4};
     use super::*;
 
     impl RandomGeneratable for Vec2 {
