@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "frand"
-version = "0.8.1"
+version = "0.8.2"
 dependencies = [
  "fastrand",
  "glam 0.24.1",

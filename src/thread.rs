@@ -34,7 +34,7 @@ thread_local!(
 );
 
 
-pub fn thread_randy() -> ThreadFrand {
+pub fn thread_frand() -> ThreadFrand {
     let rng = THREAD_RNG_KEY.with(|t| t.clone());
     ThreadFrand { rng }
 }
@@ -43,7 +43,7 @@ pub fn thread_randy() -> ThreadFrand {
 
 impl Default for ThreadFrand {
     fn default() -> ThreadFrand {
-        thread_randy()
+        thread_frand()
     }
 }
 
@@ -105,12 +105,12 @@ impl RngCore for ThreadFrand {
 mod test {
     use rand::Rng;
 
-    use crate::thread::thread_randy;
+    use crate::thread::thread_frand;
 
     #[test]
     fn test_thread_rng() {
 
-        let mut r = thread_randy();
+        let mut r = thread_frand();
         // r.gen::<i32>();
         assert_eq!(r.gen_range(0..1), 0);
     }

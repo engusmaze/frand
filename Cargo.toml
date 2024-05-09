@@ -1,6 +1,6 @@
 [package]
 name = "frand"
-version = "0.8.1"
+version = "0.8.2"
 edition = "2021"
 authors = ["EngusMaze"]
 description = "Blazingly fast random number generation library"
@@ -30,7 +30,7 @@ rand_core = { version = "0.6", optional = true }
 
 [features]
 default = ["glam_027", "std", "alloc", "thread_rng", "impl_rng_core"]
-thread_rng = ["dep:rand"]
+thread_rng = ["dep:rand", "impl_rng_core"]
 impl_rng_core = ["dep:rand_core", "dep:rand"]
 glam_027 = ["dep:glam_027", "glam"]
 glam_026 = ["dep:glam_026", "glam"]

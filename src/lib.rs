@@ -4,6 +4,8 @@
 use rand::{RngCore, SeedableRng};
 #[cfg(feature = "impl_rng_core")]
 use rand_core::impls::fill_bytes_via_next;
+#[cfg(feature = "impl_rng_core")]
+pub use rand::*;
 
 mod gen;
 pub use gen::*;
