@@ -1,5 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use core::mem::transmute;
+
 mod gen;
 pub use gen::*;
 
@@ -42,13 +44,9 @@ impl Rand {
     #[cfg(feature = "std")]
     #[inline]
     pub fn new() -> Self {
-        let duration = std::time::SystemTime::UNIX_EPOCH
-            .elapsed()
-            .expect("Failed to get current time");
-        let mut rand = Self {
-            seed: duration.as_secs(),
-        };
-        rand.mix(duration.subsec_nanos() as u64);
+        let [a, b]: [u64; 2] = unsafe { transmute(std::time::Instant::now()) };
+        let mut rand = Self { seed: a };
+        rand.mix(b);
         rand
     }
 
