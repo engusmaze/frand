@@ -60,8 +60,6 @@ println!("{}", rng.gen::<f32>());
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "impl_rng_core")]
-use rand::{RngCore, SeedableRng};
-#[cfg(feature = "impl_rng_core")]
 use rand_core::impls::fill_bytes_via_next;
 #[cfg(feature = "impl_rng_core")]
 pub use rand::*;
