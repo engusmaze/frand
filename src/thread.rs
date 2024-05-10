@@ -33,7 +33,7 @@ thread_local!(
     }
 );
 
-
+/// Retrieve the lazily-initialized thread-local random number generator.
 pub fn thread_frand() -> ThreadFrand {
     let rng = THREAD_RNG_KEY.with(|t| t.clone());
     ThreadFrand { rng }
@@ -46,13 +46,6 @@ impl Default for ThreadFrand {
         thread_frand()
     }
 }
-
-// impl ThreadFrand {
-    
-//     pub fn gen<T>() {
-//         let rng = unsafe { &mut *self.rng.get() };
-//     }
-// }
 
 impl ThreadFrand {
     /// Mixes the current seed with the provided value.
@@ -96,9 +89,6 @@ impl RngCore for ThreadFrand {
         (unsafe { &mut *self.rng.get() }).try_fill_bytes(dest)
     }
 }
-
-
-
 
 
 #[cfg(test)]

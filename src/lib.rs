@@ -1,3 +1,62 @@
+/*!
+**FRand** is a blazingly fast, small, and simple pseudo-random number 
+generator (PRNG) written in Rust. The advantage of using FRand is that 
+it can produce more random numbers per second than other libraries. It 
+also produces high-quality random numbers using a fast 
+**non-cryptographic** hashing algorithm.
+
+# Usage
+
+This crate is [on crates.io](https://crates.io/crates/regex) and can be
+used by adding `regex` to your dependencies in your project's `Cargo.toml`.
+
+```toml
+[dependencies]
+frand = "0.8"
+```
+
+# Example
+
+**FRand** is really simple to use. Here is a simple example of how to 
+use FRand to generate a random float:
+
+```rust
+use frand::Rand;
+
+let mut rng = Rand::new();
+println!("{}", rng.gen::<f32>());
+```
+
+# Crate features
+
+* **std** -
+    (default) Enables the use of the standard library. This feature is 
+    required for the `new` and `rehash` functions.
+* **alloc* -
+    (default) Enables the use of the `alloc` crate. This feature is 
+    required to allow shuffling of Boxes and Vecs.
+* **impl_rng_core** -
+    (default) Enables the implementation of the `rand::RngCore` and 
+    `rand::SeedableRng` traits for the `Rand` struct. This feature is
+    required to use FRand with the `rand` and things like `rand::distributions`.
+* **thread_rng** -
+    (default) Enables the thread local version of FRand. This can be
+    accessed using the `thread_frand` function.
+* **glam_027** -
+    (default) Uses glam version 0.27 to enable the generation of random 
+    values for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
+* **glam_026** -
+    (default) Uses glam version 0.26 to enable the generation of random 
+    values for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
+* **glam_025** -
+    (default) Uses glam version 0.25 to enable the generation of random 
+    values for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
+* **glam_024** -
+    (default) Uses glam version 0.24 to enable the generation of random 
+    values for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.        
+
+
+ */
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "impl_rng_core")]

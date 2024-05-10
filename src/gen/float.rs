@@ -67,7 +67,7 @@ mod glam_impl {
     #[cfg(feature = "glam_025")]
     pub use glam_025::{Vec2, Vec3, Vec3A, Vec4};
     #[cfg(feature = "glam_024")]
-    pub use glam_025::{Vec2, Vec3, Vec3A, Vec4};
+    pub use glam_024::{Vec2, Vec3, Vec3A, Vec4};
     use super::*;
 
     impl RandomGeneratable for Vec2 {
