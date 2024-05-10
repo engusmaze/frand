@@ -1,12 +1,21 @@
-use frand::{Rand, Shuffle, Shuffled};
+use std::array;
+
+use frand::{Rand, Shufflable};
 
 fn main() {
     let mut rng = Rand::new();
 
-    let shuffled_array = (0..=255).collect::<Box<[u8]>>().shuffled(&mut rng);
-    println!("{:?}", shuffled_array);
+    let shuffled = array::from_fn::<u8, 16, _>(|i| i as u8).shuffled(&mut rng);
+    println!("{:?}", shuffled);
 
-    let mut mutable_array_shuffle = (0..=255).collect::<Box<[u8]>>();
-    mutable_array_shuffle.shuffle(&mut rng);
-    println!("{:?}", mutable_array_shuffle);
+    let shuffled_boxed_slice = (0..=16).collect::<Box<[u8]>>().shuffled(&mut rng);
+    println!("{:?}", shuffled_boxed_slice);
+
+    let mut shuffle_box_slice: Box<[u8]> = (0..=16).collect();
+    shuffle_box_slice.shuffle(&mut rng);
+    println!("{:?}", shuffle_box_slice);
+
+    let mut shuffle_vec: Vec<u8> = (0..=16).collect();
+    shuffle_vec.shuffle(&mut rng);
+    println!("{:?}", shuffle_vec);
 }

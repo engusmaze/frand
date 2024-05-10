@@ -1,10 +1,7 @@
 use crate::*;
 
-pub trait Shuffle {
+trait Shuffle {
     fn shuffle(&mut self, rng: &mut Rand);
-}
-pub trait Shuffled {
-    fn shuffled(self, rng: &mut Rand) -> Self;
 }
 impl<T> Shuffle for [T] {
     #[inline]
@@ -16,29 +13,20 @@ impl<T> Shuffle for [T] {
     }
 }
 
-#[cfg(feature = "alloc")]
-extern crate alloc;
+pub trait Shufflable<T>: AsMut<[T]> {
+    fn shuffle(&mut self, rng: &mut Rand);
+    fn shuffled(self, rng: &mut Rand) -> Self;
+}
 
-#[cfg(feature = "alloc")]
-impl<T> Shuffled for alloc::boxed::Box<[T]> {
+impl<T, U: AsMut<[T]>> Shufflable<T> for U {
     #[inline]
     fn shuffled(mut self, rng: &mut Rand) -> Self {
-        self.shuffle(rng);
+        self.as_mut().shuffle(rng);
         self
     }
-}
-#[cfg(feature = "alloc")]
-impl<T> Shuffle for alloc::vec::Vec<T> {
+
     #[inline]
     fn shuffle(&mut self, rng: &mut Rand) {
-        self.as_mut_slice().shuffle(rng)
-    }
-}
-#[cfg(feature = "alloc")]
-impl<T> Shuffled for alloc::vec::Vec<T> {
-    #[inline]
-    fn shuffled(mut self, rng: &mut Rand) -> Self {
-        self.shuffle(rng);
-        self
+        self.as_mut().shuffle(rng);
     }
 }
