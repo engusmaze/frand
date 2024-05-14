@@ -26,4 +26,3 @@ glam = { version = "0.27", optional = true }
 default = ["glam", "std"]
 glam = ["dep:glam"]
 std = []
-alloc = []
