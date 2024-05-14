@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use core::mem::transmute;
+use core::{mem::transmute, ops::Range};
 
 mod gen;
 pub use gen::*;
@@ -56,12 +56,5 @@ impl Rand {
     #[inline]
     pub fn rehash(&mut self) {
         *self = Self::new();
-    }
-
-    /// Generates a random value of type T using this Rand instance.
-    /// T must implement the RandomGeneratable trait, which defines how to generate random values.
-    #[inline(always)]
-    pub fn gen<T: RandomGeneratable>(&mut self) -> T {
-        T::random(self)
     }
 }

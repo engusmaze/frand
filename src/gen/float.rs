@@ -1,6 +1,6 @@
 use core::mem::transmute;
 
-use super::*;
+use crate::*;
 
 const F32_VALUE: u32 = !0 >> 9;
 const F32_MENTISA: u32 = 0x3f800000;
@@ -11,20 +11,20 @@ const F64_MENTISA: u64 = 0x3ff0000000000000;
 // Shift to mentisa and make the exponent so that the value range of mentisa is [1; 2)
 // Convert to float and subtract 1.0 so that we get [0; 1)
 // See https://mina86.com/2016/random-reals/
-impl RandomGeneratable for f32 {
+impl Random for f32 {
     #[inline(always)]
     fn random(rng: &mut Rand) -> f32 {
         f32::from_bits(u32::random(rng) >> 9 | 0x3f800000) + -1.0
     }
 }
-impl RandomGeneratable for f64 {
+impl Random for f64 {
     #[inline(always)]
     fn random(rng: &mut Rand) -> f64 {
         f64::from_bits(u64::random(rng) >> 12 | 0x3ff0000000000000) + -1.0
     }
 }
 
-impl RandomGeneratable for [f32; 2] {
+impl Random for [f32; 2] {
     #[inline(always)]
     fn random(rng: &mut Rand) -> Self {
         const F32_VALUE_X2: u64 = unsafe { transmute([F32_VALUE; 2]) };
@@ -34,13 +34,13 @@ impl RandomGeneratable for [f32; 2] {
         [vec[0] + -1.0, vec[1] + -1.0]
     }
 }
-impl RandomGeneratable for [f32; 3] {
+impl Random for [f32; 3] {
     #[inline(always)]
     fn random(rng: &mut Rand) -> Self {
         unsafe { transmute((<[f32; 2]>::random(rng), f32::random(rng))) }
     }
 }
-impl RandomGeneratable for [f32; 4] {
+impl Random for [f32; 4] {
     #[inline(always)]
     fn random(rng: &mut Rand) -> Self {
         const F32_VALUE_X2: u128 = unsafe { transmute([F32_VALUE; 4]) };
@@ -51,7 +51,7 @@ impl RandomGeneratable for [f32; 4] {
     }
 }
 
-impl RandomGeneratable for [f64; 2] {
+impl Random for [f64; 2] {
     #[inline(always)]
     fn random(rng: &mut Rand) -> Self {
         const F64_VALUE_X2: u128 = unsafe { transmute([F64_VALUE; 2]) };
@@ -68,25 +68,25 @@ mod glam_impl {
 
     use super::*;
 
-    impl RandomGeneratable for Vec2 {
+    impl Random for Vec2 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
             Vec2::from_array(rng.gen())
         }
     }
-    impl RandomGeneratable for Vec3 {
+    impl Random for Vec3 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
             Vec3::from_array(rng.gen())
         }
     }
-    impl RandomGeneratable for Vec3A {
+    impl Random for Vec3A {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
             Vec3A::from_array(rng.gen())
         }
     }
-    impl RandomGeneratable for Vec4 {
+    impl Random for Vec4 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
             Vec4::from_array(rng.gen())
