@@ -70,6 +70,10 @@ impl ThreadFrand {
     pub fn gen<T: Random>(&mut self) -> T {
         (unsafe { &mut *self.rng.get() }).gen::<T>()
     }
+
+    pub fn get_rng(&mut self) -> &mut Frand {
+        unsafe { &mut *self.rng.get() }
+    }
 }
 
 impl RngCore for ThreadFrand {
