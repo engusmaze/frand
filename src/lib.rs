@@ -119,7 +119,7 @@ impl Rand {
     }
 }
 
-
+#[cfg(feature = "impl_rng_core")]
 impl RngCore for Rand {
     fn next_u32(&mut self) -> u32 {
         self.gen::<u32>()
