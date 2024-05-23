@@ -8,103 +8,76 @@
 
 //! Thread-local random number generator
 
-use core::cell::UnsafeCell;
-use std::rc::Rc;
-use std::thread_local;
+use std::{thread_local, rc::Rc, cell::UnsafeCell};
 
-use rand::RngCore;
+use crate::{Rand, Random};
 
-use crate::{Rand as Frand, Random };
-
-
-
-#[derive(Clone, Debug,)]
-pub struct ThreadFrand {
+#[derive(Clone, Debug)]
+pub struct ThreadRand {
     // Rc is explicitly !Send and !Sync
-    rng: Rc<UnsafeCell<Frand>>,
+    rng: Rc<UnsafeCell<Rand>>,
 }
 
-thread_local!(
+thread_local! {
     // We require Rc<..> to avoid premature freeing when thread_rng is used
     // within thread-local destructors. See #968.
-    static THREAD_RNG_KEY: Rc<UnsafeCell<Frand>> = {
-        let rng = Frand::new();
+    static THREAD_RNG_KEY: Rc<UnsafeCell<Rand>> = {
+        let rng = Rand::new();
         Rc::new(UnsafeCell::new(rng))
     }
-);
-
-/// Retrieve the lazily-initialized thread-local random number generator.
-pub fn thread_frand() -> ThreadFrand {
-    let rng = THREAD_RNG_KEY.with(|t| t.clone());
-    ThreadFrand { rng }
 }
 
+/// Retrieve the lazily-initialized thread-local random number generator.
+pub fn thread_rand() -> ThreadRand {
+    let rng = THREAD_RNG_KEY.with(|t| t.clone());
+    ThreadRand { rng }
+}
 
-
-impl Default for ThreadFrand {
-    fn default() -> ThreadFrand {
-        thread_frand()
+impl Default for ThreadRand {
+    fn default() -> ThreadRand {
+        thread_rand()
     }
 }
 
-impl ThreadFrand {
+impl ThreadRand {
+    #[inline(always)]
+    pub fn get_rng(&mut self) -> &mut Rand {
+        unsafe { &mut *self.rng.get() }
+    }
+
     /// Mixes the current seed with the provided value.
     /// This mixing operation is particularly useful in `no_std` environments when you want
     /// to create a PRNG that incorporates external factors or environmental entropy, such
     /// as time, to increase randomness.
     #[inline]
     pub fn mix(&mut self, value: u64) {
-        (unsafe { &mut *self.rng.get() }).mix(value);
+        self.get_rng().mix(value);
     }
 
     /// Rehashes the current Rand instance by creating a new one with a fresh seed.
     /// This function is only available when the "std" feature is enabled.
     #[inline]
     pub fn rehash(&mut self) {
-        (unsafe { &mut *self.rng.get() }).rehash();
+        self.get_rng().rehash();
     }
 
     /// Generates a random value of type T using this Rand instance.
     /// T must implement the Random trait, which defines how to generate random values.
     #[inline(always)]
     pub fn gen<T: Random>(&mut self) -> T {
-        (unsafe { &mut *self.rng.get() }).gen::<T>()
-    }
-
-    pub fn get_rng(&mut self) -> &mut Frand {
-        unsafe { &mut *self.rng.get() }
+        self.get_rng().gen::<T>()
     }
 }
-
-impl RngCore for ThreadFrand {
-    fn next_u32(&mut self) -> u32 {
-        (unsafe { &mut *self.rng.get() }).gen::<u32>()
-    }
-
-    fn next_u64(&mut self) -> u64 {
-        (unsafe { &mut *self.rng.get() }).gen::<u64>()
-    }
-
-    fn fill_bytes(&mut self, dest: &mut [u8]) {
-        (unsafe { &mut *self.rng.get() }).fill_bytes(dest)
-    }
-
-    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
-        (unsafe { &mut *self.rng.get() }).try_fill_bytes(dest)
-    }
-}
-
 
 #[cfg(test)]
 mod test {
     use rand::Rng;
 
-    use crate::thread::thread_frand;
+    use crate::thread_rand;
 
     #[test]
     fn test_thread_rng() {
-
-        let mut r = thread_frand();
+        let mut r = thread_rand();
         // r.gen::<i32>();
         assert_eq!(r.gen_range(0..1), 0);
     }
