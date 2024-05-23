@@ -64,9 +64,8 @@ impl Random for [f64; 2] {
 
 #[cfg(feature = "glam")]
 mod glam_impl {
-    use glam::{Vec2, Vec3, Vec3A, Vec4};
-
-    use super::*;
+    pub use glam::{Vec2, Vec3, Vec3A, Vec4};
+    use crate::{Rand, Random};
 
     impl Random for Vec2 {
         #[inline(always)]

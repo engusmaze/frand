@@ -1,9 +1,58 @@
+//! **FRand** is a blazingly fast, small, and simple pseudo-random number
+//! generator (PRNG) written in Rust. The advantage of using FRand is that
+//! it can produce more random numbers per second than other libraries. It
+//! also produces high-quality random numbers using a fast
+//! **non-cryptographic** hashing algorithm.
+//!
+//! # Usage
+//!
+//! This crate is [on crates.io](https://crates.io/crates/regex) and can be
+//! used by adding `frand` to your dependencies in your project's `Cargo.toml`.
+//!
+//! ```toml
+//! [dependencies]
+//! frand = "0.8"
+//! ```
+//!
+//! # Example
+//!
+//! **FRand** is really simple to use. Here is a simple example of how to
+//! use FRand to generate a random float:
+//!
+//! ```rust
+//! use frand::Rand;
+//!
+//! let mut rng = Rand::new();
+//! println!("{}", rng.gen::<f32>());
+//! ```
+//!
+//! # Crate features
+//!
+//! * **std** -
+//!     (default) Enables the use of the standard library. This feature is
+//!     required for the `new` and `rehash` functions.
+//! * **impl_rng_core** -
+//!     (default) Enables the implementation of the `rand::RngCore` and
+//!     `rand::SeedableRng` traits for the `Rand` struct. This feature is
+//!     required to use FRand with the `rand` and things like `rand::distributions`.
+//! * **glam** -
+//!     (default) Uses glam to enable the generation of random values
+//!     for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
+
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use core::{mem::transmute, ops::Range};
 
 mod gen;
 pub use gen::*;
+
+#[cfg(feature = "std")]
+mod thread;
+#[cfg(feature = "std")]
+pub use thread::*;
+
+#[cfg(feature = "impl_rng_core")]
+mod rng_core_impl;
 
 mod shuffle;
 pub use shuffle::*;

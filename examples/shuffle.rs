@@ -5,7 +5,7 @@ use frand::{Rand, Shufflable};
 fn main() {
     let mut rng = Rand::new();
 
-    let shuffled = array::from_fn::<u8, 16, _>(|i| i as u8).shuffled(&mut rng);
+    let shuffled: [u8; 16] = array::from_fn(|i| i as u8).shuffled(&mut rng);
     println!("{:?}", shuffled);
 
     let shuffled_boxed_slice = (0..=16).collect::<Box<[u8]>>().shuffled(&mut rng);
