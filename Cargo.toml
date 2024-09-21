@@ -1,6 +1,6 @@
 [package]
 name = "frand"
-version = "0.10.0"
+version = "0.10.1"
 edition = "2021"
 authors = ["EngusMaze"]
 description = "Blazingly fast random number generation library"
@@ -10,6 +10,10 @@ homepage = "https://github.com/engusmaze/frand"
 license = "Apache-2.0 OR MIT"
 exclude = ["*.png"]
 readme = "README.md"
+
+[workspace]
+resolver = "2"
+members = ["examples/no-std"]
 
 [dev-dependencies]
 image = { version = "0.24.6", default-features = false, features = ["png"] }

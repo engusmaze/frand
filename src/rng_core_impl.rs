@@ -1,6 +1,6 @@
 use rand_core::{impls, Error, RngCore, SeedableRng};
 
-use crate::{Rand, ThreadRand};
+use crate::Rand;
 
 impl RngCore for Rand {
     #[inline]
@@ -39,7 +39,8 @@ impl SeedableRng for Rand {
     }
 }
 
-impl RngCore for ThreadRand {
+#[cfg(feature = "std")]
+impl RngCore for crate::ThreadRand {
     #[inline]
     fn next_u32(&mut self) -> u32 {
         self.get_rng().gen::<u32>()
