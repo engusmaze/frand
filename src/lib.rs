@@ -23,28 +23,28 @@
 //! use frand::Rand;
 //!
 //! let mut rng = Rand::new();
-//! println!("{}", rng.gen::<f32>());
+//! println!("{}", rng.random::<f32>());
 //! ```
 //!
 //! # Crate features
 //!
 //! * **std** -
-//!     (default) Enables the use of the standard library. This feature is
-//!     required for the `new` and `rehash` functions.
+//!   (default) Enables the use of the standard library. This feature is
+//!   required for the `new` and `rehash` functions.
 //! * **impl_rng_core** -
-//!     (default) Enables the implementation of the `rand::RngCore` and
-//!     `rand::SeedableRng` traits for the `Rand` struct. This feature is
-//!     required to use FRand with the `rand` and things like `rand::distributions`.
+//!   (default) Enables the implementation of the `rand::RngCore` and
+//!   `rand::SeedableRng` traits for the `Rand` struct. This feature is
+//!   required to use FRand with the `rand` and things like `rand::distributions`.
 //! * **glam** -
-//!     (default) Uses glam to enable the generation of random values
-//!     for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
+//!   (default) Uses glam to enable the generation of random values
+//!   for glam::Vec2, glam::Vec3, glam::Vec3A, and glam::Vec4.
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use core::{mem::transmute, ops::Range};
 
-mod gen;
-pub use gen::*;
+mod random;
+pub use random::*;
 
 #[cfg(feature = "std")]
 mod thread;
@@ -105,5 +105,11 @@ impl Rand {
     #[inline]
     pub fn rehash(&mut self) {
         *self = Self::new();
+    }
+}
+
+impl Default for Rand {
+    fn default() -> Self {
+        Self::new()
     }
 }

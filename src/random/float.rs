@@ -64,31 +64,31 @@ impl Random for [f64; 2] {
 
 #[cfg(feature = "glam")]
 mod glam_impl {
-    pub use glam::{Vec2, Vec3, Vec3A, Vec4};
     use crate::{Rand, Random};
+    pub use glam::{Vec2, Vec3, Vec3A, Vec4};
 
     impl Random for Vec2 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
-            Vec2::from_array(rng.gen())
+            Vec2::from_array(rng.random())
         }
     }
     impl Random for Vec3 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
-            Vec3::from_array(rng.gen())
+            Vec3::from_array(rng.random())
         }
     }
     impl Random for Vec3A {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
-            Vec3A::from_array(rng.gen())
+            Vec3A::from_array(rng.random())
         }
     }
     impl Random for Vec4 {
         #[inline(always)]
         fn random(rng: &mut Rand) -> Self {
-            Vec4::from_array(rng.gen())
+            Vec4::from_array(rng.random())
         }
     }
 }

@@ -12,7 +12,7 @@ To find the best constants for the algorithm, I used an automated program that t
 use frand::Rand;
 
 let mut rng = Rand::new();
-println!("{}", rng.gen::<f32>());
+println!("{}", rng.random::<f32>());
 ```
 
 ## Speeds

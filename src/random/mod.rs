@@ -13,7 +13,7 @@ impl Rand {
     /// Generates a random value of type T using this Rand instance.
     /// T must implement the RandomGeneratable trait, which defines how to generate random values.
     #[inline(always)]
-    pub fn gen<T: Random>(&mut self) -> T {
+    pub fn random<T: Random>(&mut self) -> T {
         T::random(self)
     }
 }
@@ -24,7 +24,7 @@ pub trait RandomRange: Sized {
 
 impl Rand {
     #[inline(always)]
-    pub fn gen_range<T: RandomRange>(&mut self, range: Range<T>) -> T {
+    pub fn random_range<T: RandomRange>(&mut self, range: Range<T>) -> T {
         T::random_range(self, range)
     }
 }

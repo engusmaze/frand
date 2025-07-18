@@ -8,7 +8,7 @@
 
 //! Thread-local random number generator
 
-use std::{thread_local, rc::Rc, cell::UnsafeCell};
+use std::{cell::UnsafeCell, rc::Rc, thread_local};
 
 use crate::{Rand, Random};
 
@@ -64,8 +64,8 @@ impl ThreadRand {
     /// Generates a random value of type T using this Rand instance.
     /// T must implement the Random trait, which defines how to generate random values.
     #[inline(always)]
-    pub fn gen<T: Random>(&mut self) -> T {
-        self.get_rng().gen::<T>()
+    pub fn random<T: Random>(&mut self) -> T {
+        self.get_rng().random::<T>()
     }
 }
 
@@ -78,7 +78,7 @@ mod test {
     #[test]
     fn test_thread_rng() {
         let mut r = thread_rand();
-        // r.gen::<i32>();
-        assert_eq!(r.gen_range(0..1), 0);
+        // r.random::<i32>();
+        assert_eq!(r.random_range(0..1), 0);
     }
 }

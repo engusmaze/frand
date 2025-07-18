@@ -1,27 +1,21 @@
-use rand_core::{impls, Error, RngCore, SeedableRng};
+use rand_core::{impls, RngCore, SeedableRng};
 
 use crate::Rand;
 
 impl RngCore for Rand {
     #[inline]
     fn next_u32(&mut self) -> u32 {
-        self.gen::<u32>()
+        self.random::<u32>()
     }
 
     #[inline]
     fn next_u64(&mut self) -> u64 {
-        self.gen::<u64>()
+        self.random::<u64>()
     }
 
     #[inline]
     fn fill_bytes(&mut self, dest: &mut [u8]) {
         impls::fill_bytes_via_next(self, dest);
-    }
-
-    #[inline]
-    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), Error> {
-        self.fill_bytes(dest);
-        Ok(())
     }
 }
 
@@ -43,21 +37,16 @@ impl SeedableRng for Rand {
 impl RngCore for crate::ThreadRand {
     #[inline]
     fn next_u32(&mut self) -> u32 {
-        self.get_rng().gen::<u32>()
+        self.get_rng().random::<u32>()
     }
 
     #[inline]
     fn next_u64(&mut self) -> u64 {
-        self.get_rng().gen::<u64>()
+        self.get_rng().random::<u64>()
     }
 
     #[inline]
     fn fill_bytes(&mut self, dest: &mut [u8]) {
         self.get_rng().fill_bytes(dest)
-    }
-
-    #[inline]
-    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
-        self.get_rng().try_fill_bytes(dest)
     }
 }

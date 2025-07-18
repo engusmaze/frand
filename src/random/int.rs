@@ -34,13 +34,13 @@ impl Random for u128 {
 impl Random for u8 {
     #[inline(always)]
     fn random(rng: &mut Rand) -> u8 {
-        rng.gen::<u32>() as u8
+        rng.random::<u32>() as u8
     }
 }
 impl Random for u16 {
     #[inline(always)]
     fn random(rng: &mut Rand) -> u16 {
-        rng.gen::<u32>() as u16
+        rng.random::<u32>() as u16
     }
 }
 
@@ -48,11 +48,11 @@ impl Random for usize {
     #[inline(always)]
     fn random(rng: &mut Rand) -> usize {
         #[cfg(target_pointer_width = "16")]
-        return rng.gen::<u16>() as usize;
+        return rng.random::<u16>() as usize;
         #[cfg(target_pointer_width = "32")]
-        return rng.gen::<u32>() as usize;
+        return rng.random::<u32>() as usize;
         #[cfg(not(any(target_pointer_width = "16", target_pointer_width = "32")))]
-        return rng.gen::<u64>() as usize;
+        return rng.random::<u64>() as usize;
     }
 }
 
